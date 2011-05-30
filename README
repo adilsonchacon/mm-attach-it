@@ -1,0 +1,172 @@
+= Mm-attach-it
+
+Attach files (images, videos, pdfs, txts, zips and etc) to a MongoMapper record. You can choose if you to store it on file system or GridFS.
+
+== Install
+
+  sudo gem install mm-attach-it
+
+== Usage
+
+=== Model
+
+Declare the plugin and use the attachment method to make attachments.
+
+  class Foo
+    include MongoMapper::Document
+    plugin AttachIt
+
+    has_attachment :photo
+  end
+
+The default storage is the file system, if you want to change for GridFS you should do:
+
+  class Bar
+    include MongoMapper::Document
+    plugin AttachIt
+
+    has_attachment :photo, { :storage => 'gridfs' }
+  end
+
+If you want to resize the images (you can store resized images on both: file system or GridFS)
+
+  class Foo
+    include MongoMapper::Document
+    plugin AttachIt
+
+    has_attachment :photo, { :styles => { :small => '100x100>', :medium => '200x200>' } }
+  end
+
+If you want to validate the attached file (again you can validate attaches on both: file system or GridFS)
+
+  class Foo
+    include MongoMapper::Document
+    plugin AttachIt
+
+    has_attch :photo
+
+    validates_attachment_presence :photo
+    validates_attachment_content_type: photo, :content_type => ['image/jpeg', 'image/gif', 'image/png']
+    validates_attachment_size :photo, { :less_than => 1.megabyte, :greater_than => 500.kilobytes }
+  end
+
+OBS: But remember, you can attach whatever kind of file!
+
+If you are using the file system to store the files you can specify the storage directory
+
+  class Foo
+    include MongoMapper::Document
+    plugin AttachIt
+
+    has_attachment :photo, { :path => '/:rails_root/public/images/foos/:id/:style/:filename' }
+  end
+
+OBS: The default directory is '/:rails_root/public/system/:attachment/:id/:style/:filename'
+
+Where:
+* :rails_root - is the root directory of your Rails application
+* :environment - can be "production", "test" or "development"
+* :class - the name of the class ('foo' the example above)
+* :attachment - is the name of the column's collection ('photo' the example above)
+* :id - the "id" of the record on MongoDB
+* :style - if you specified the styles
+* :filename - the name of the file
+* :extension - the extension of the file
+
+=== View
+
+Check the model below
+
+  class Foo
+    include MongoMapper::Document
+    plugin AttachIt
+
+    # on file system
+    has_attachment :photo, { 
+      :style => { :thumb => '100x100>' },
+      :url => '/assets/groups/:id/:style/:filename', 
+      :path => '/:rails_root/public/image/foos/:id/:style/:filename', :storage => 'gridfs',
+    }
+
+    # on GridFS
+    has_attachment :avatar, {
+      :style => { :thumb => '100x100>' }, 
+      :storage => 'gridfs', 
+    }
+  end
+
+On form you must set the "multipart" option and the field as "file_field":
+
+  <%= form_for(@foo, :html => { :multipart => true }) do |f| %>
+
+    <p>
+      <%= f.label :photo %>
+      <%= f.file_field :photo %>
+    </p>
+
+    <p>
+      <%= f.label :avatar %>
+      <%= f.file_field :avatar %>
+    </p>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+
+
+The safest way to show the images is using Base64, doesn't matter if you are using the file system or GridFS.
+
+  <img src="<%= foo.photo.base64 %>">
+  <img src="<%= foo.photo.base64('thumb') %>">
+
+  <img src="<%= foo.avatar.base64 %>">
+  <img src="<%= foo.avatar.base64('thumb') %>">
+
+Also, only for file system, if you specify the 'url' option you can do:
+
+  <%= image_tag foo.photo.url %>
+  <%= image_tag foo.photo.url('thumb') %>
+
+=== Controller
+
+If you are using the GridFS to store your files and youn don't want to use Base64 data to show the images you've got to create a action on a controller.
+
+But first create a new route on the route's file:
+  
+  match '/foos/avatar/:id(/:style)', :to => 'foos#avatar'
+  
+Now the controller:
+
+  class FoosController < ApplicationController
+
+    ...
+    
+    def avatar
+      foo = Foo.where('_id' => BSON::ObjectId(params[:id])).first
+      grid_io_data = (params[:style].nil?) ? foo.avatar.get_from_gridfs : foo.avatar.get_from_gridfs(params[:style])
+      bytes = grid_io_data.read
+      send_data(bytes, :type => foo.avatar_content_type, :disposition => 'inline')
+    end
+
+    ...
+
+  end
+
+And the view do that:
+  
+  <%= image_tag  "/foos/avatar/#{foo.id.to_s}/small" %>
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2010 Adilson Chacon. See LICENSE for details.
