@@ -6,7 +6,7 @@ Attach files (images, videos, pdfs, txts, zips and etc) to a MongoMapper record.
 
   sudo gem install mm-attach-it
 
-Or add in your Rails's Gemfile app:
+Or add in your Rails's Gemfile:
 
   gem "mm-attach-it"
 
