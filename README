@@ -87,14 +87,14 @@ Check the model below
 
     # on file system
     has_attachment :photo, { 
-      :style => { :thumb => '100x100>' },
+      :styles => { :thumb => '100x100>' },
       :url => '/assets/groups/:id/:style/:filename', 
       :path => '/:rails_root/public/image/foos/:id/:style/:filename', :storage => 'gridfs',
     }
 
     # on GridFS
     has_attachment :avatar, {
-      :style => { :thumb => '100x100>' }, 
+      :styles => { :thumb => '100x100>' }, 
       :storage => 'gridfs', 
     }
   end
