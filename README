@@ -134,7 +134,7 @@ Also, only for file system, if you specify the 'url' option you can do:
 
 === Controller
 
-If you are using the GridFS to store your files and youn don't want to use Base64 data to show the images you've got to create a action on a controller.
+If you are using the GridFS to store your files and you don't want to use Base64 data to show the images you've got to create an action on a controller.
 
 But first create a new route on the route's file:
   
