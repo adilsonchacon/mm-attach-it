@@ -1,12 +1,12 @@
 = Mm-attach-it
 
-Attach files (images, videos, pdfs, txts, zips and etc) to a MongoMapper record. You can choose if you to store it on file system or GridFS.
+Attach files (images, videos, pdfs, txts, zips and etc) to a MongoMapper record. You can even choose to store them on file system or GridFS.
 
 == Install
 
   sudo gem install mm-attach-it
 
-Or add in your Rails's Gemfile:
+Or add it to your Rails’s Gemfile::
 
   gem "mm-attach-it"
 
@@ -23,7 +23,7 @@ Declare the plugin and use the attachment method to make attachments.
     has_attachment :photo
   end
 
-The default storage is the file system, if you want to change for GridFS you should do:
+The default storage destination is the file system, if you want to change it to GridFS you should add the following: 
 
   class Bar
     include MongoMapper::Document
@@ -32,7 +32,7 @@ The default storage is the file system, if you want to change for GridFS you sho
     has_attachment :photo, { :storage => 'gridfs' }
   end
 
-If you want to resize the images (you can store resized images on both: file system or GridFS)
+If you want to resize the images (you can store resized images on both: file systems or GridFS): 
 
   class Foo
     include MongoMapper::Document
@@ -41,7 +41,7 @@ If you want to resize the images (you can store resized images on both: file sys
     has_attachment :photo, { :styles => { :small => '100x100>', :medium => '200x200>' } }
   end
 
-If you want to validate the attached file (again you can validate attaches on both: file system or GridFS)
+ If you want to validate the attached file (again, you can validate attachments on both: file system or GridFS):
 
   class Foo
     include MongoMapper::Document
@@ -50,13 +50,13 @@ If you want to validate the attached file (again you can validate attaches on bo
     has_attch :photo
 
     validates_attachment_presence :photo
-    validates_attachment_content_type: photo, :content_type => ['image/jpeg', 'image/gif', 'image/png']
+    validates_attachment_content_type :photo, :content_type => ['image/jpeg', 'image/gif', 'image/png']
     validates_attachment_size :photo, { :less_than => 1.megabyte, :greater_than => 500.kilobytes }
   end
 
-OBS: But remember, you can attach whatever kind of file!
+OBS: But remember! You can attach any desirable file.
 
-If you are using the file system to store the files you can specify the storage directory
+If you are using the file system to store files, you can specify the directory/folder to store them.
 
   class Foo
     include MongoMapper::Document
@@ -65,13 +65,13 @@ If you are using the file system to store the files you can specify the storage 
     has_attachment :photo, { :path => '/:rails_root/public/images/foos/:id/:style/:filename' }
   end
 
-OBS: The default directory is '/:rails_root/public/system/:attachment/:id/:style/:filename'
+OBS: The default directory is ’/:rails_root/public/system/:attachment/:id/:style/:filename’
 
 Where:
 * :rails_root - is the root directory of your Rails application
 * :environment - can be "production", "test" or "development"
-* :class - the name of the class ('foo' the example above)
-* :attachment - is the name of the column's collection ('photo' the example above)
+* :class - the name of the class (in the example given above, ‘foo’) 
+* :attachment - is the name of the column’s collection (in the example given above, ‘photo’) 
 * :id - the "id" of the record on MongoDB
 * :style - if you specified the styles
 * :filename - the name of the file
@@ -99,7 +99,7 @@ Check the model below
     }
   end
 
-On form you must set the "multipart" option and the field as "file_field":
+Within forms you must set the "multipart" option and the field as "file_field":
 
   <%= form_for(@foo, :html => { :multipart => true }) do |f| %>
 
@@ -119,7 +119,7 @@ On form you must set the "multipart" option and the field as "file_field":
   <% end %>
 
 
-The safest way to show the images is using Base64, doesn't matter if you are using the file system or GridFS.
+Regardless of using the file system or GridFS the safest way to present the images is using Base64.
 
   <img src="<%= foo.photo.base64 %>">
   <img src="<%= foo.photo.base64('thumb') %>">
@@ -127,16 +127,16 @@ The safest way to show the images is using Base64, doesn't matter if you are usi
   <img src="<%= foo.avatar.base64 %>">
   <img src="<%= foo.avatar.base64('thumb') %>">
 
-Also, only for file system, if you specify the 'url' option you can do:
+Also, specifically when using the file system, if you specify the ‘url’ option, you can do:
 
   <%= image_tag foo.photo.url %>
   <%= image_tag foo.photo.url('thumb') %>
 
 === Controller
 
-If you are using the GridFS to store your files and you don't want to use Base64 data to show the images you've got to create an action on a controller.
+If you are using the GridFS to store files, and you don’t want to use Base64 data to present the images, you’ve got to create an action on a controller.
 
-But first create a new route on the route's file:
+But first create a new route on the route’s file:
   
   match '/foos/avatar/:id(/:style)', :to => 'foos#avatar'
   
@@ -157,7 +157,7 @@ Now the controller:
 
   end
 
-And the view do that:
+And, for the view, do that:
   
   <%= image_tag  "/foos/avatar/#{foo.id.to_s}/small" %>
 
