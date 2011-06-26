@@ -7,7 +7,7 @@ module AttachIt
 
   module ClassMethods
     def has_attachment(name, options = {})
-      options.symbolize_keys!
+      options = options.symbolize_keys
       name = name.to_sym
 
       after_save     :save_attachments
@@ -25,7 +25,7 @@ module AttachIt
       define_method("#{name}") do
         information_for(name, options)
       end
-
+  
       validates_each name, :logic => lambda { information_for(name, options).send(:flush_errors) }
     end
 
@@ -74,8 +74,10 @@ module AttachIt
     end
 
     def destroy_attachments
-      @attachment_options.keys.each do |name|
-        @attachment_options[name].delete
+      unless @attachment_options.nil?
+        @attachment_options.keys.each do |name|
+          @attachment_options[name].delete
+        end
       end
     end
 

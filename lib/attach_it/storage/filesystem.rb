@@ -4,7 +4,7 @@ class Filesystem < Storage
     image_options.styles.each do |style_name, style_value|
       begin        
         FileUtils.mkdir_p(File.dirname(image_options.path(style_name)))
-        resize(style_value, image_options.assigned_file.path).write(image_options.path(style_name)) 
+        transform(style_value, image_options.assigned_file.path).write(image_options.path(style_name)) 
         FileUtils.chmod(0644, image_options.path(style_name))
       rescue Exception => exception
         image_options.add_error(exception.to_s)

@@ -7,7 +7,7 @@ class Gridfs < Storage
   def flush_write(image_options = nil)
     image_options.styles.each do |style_name, style_value|
       begin
-        gridfs_id = @grid.put(resize(style_value, image_options.assigned_file.path).to_blob, :filename => style_name.to_s + '_' + image_options.file_name, :_id => "#{image_options.object_id}_#{image_options.name}_#{style_name}")
+        gridfs_id = @grid.put(transform(style_value, image_options.assigned_file.path).to_blob, :filename => style_name.to_s + '_' + image_options.file_name, :_id => "#{image_options.object_id}_#{image_options.name}_#{style_name}")
       rescue Exception => exception
         image_options.add_error(exception.to_s)
       end
@@ -23,6 +23,9 @@ class Gridfs < Storage
 
   def flush_delete(queued_for_delete = nil)
     queued_for_delete.each do |id|
+      puts id
+      puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+      puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       @grid.delete(id)
     end
   end

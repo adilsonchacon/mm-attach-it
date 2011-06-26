@@ -41,7 +41,7 @@ If you want to resize the images (you can store resized images on both: file sys
     has_attachment :photo, { :styles => { :small => '100x100>', :medium => '200x200>' } }
   end
 
- If you want to validate the attached file (again, you can validate attachments on both: file system or GridFS):
+If you want to validate the attached file (again, you can validate attachments on both: file system or GridFS):
 
   class Foo
     include MongoMapper::Document
@@ -89,7 +89,7 @@ Check the model below
     has_attachment :photo, { 
       :styles => { :thumb => '100x100>' },
       :url => '/assets/groups/:id/:style/:filename', 
-      :path => '/:rails_root/public/image/foos/:id/:style/:filename', :storage => 'gridfs',
+      :path => '/:rails_root/public/image/foos/:id/:style/:filename'
     }
 
     # on GridFS
