@@ -23,9 +23,6 @@ class Gridfs < Storage
 
   def flush_delete(queued_for_delete = nil)
     queued_for_delete.each do |id|
-      puts id
-      puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-      puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       @grid.delete(id)
     end
   end

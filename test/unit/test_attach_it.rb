@@ -60,9 +60,7 @@ class TestAttachIt < Test::Unit::TestCase
   end
 
 
-  context "Attaching not an image on file system" do
-    
-  end
+  context "Attaching not an image on file system" do    
     setup do
       @doc = DocumentOne.new
       @doc.name = 'Mydocument'

@@ -3,7 +3,7 @@ require 'tempfile'
 require 'mongo_mapper'
 require 'shoulda'
 require 'mocha'
-require File.expand_path(File.dirname(__FILE__) + '/../lib/mm_attach_it')
+require File.expand_path(File.dirname(__FILE__) + '/../lib/mm-attach-it')
 
 MongoMapper.database = "testing_mm_attach_it"
 
