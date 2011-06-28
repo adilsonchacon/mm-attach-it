@@ -21,10 +21,28 @@ class Storage
 
   def crop(new_width = nil, new_height = nil, filename = nil)
     new_image = Magick::Image.read(filename).first
+
+    geometry = resize_before_cropping(new_image, new_width, new_height)
+    new_image.change_geometry!(geometry) { |cols, rows, img| img.resize!(cols, rows) }
+
     width = new_image.columns
     height = new_image.rows
+
     new_image.crop!(width/2 - new_width/2, height/2 - new_height/2, new_width, new_height)
     new_image
+  end
+
+  def resize_before_cropping(img = nil, new_width = nil, new_height = nil)
+    width = img.columns
+    height = img.rows
+
+    if width > height
+      "x#{new_height}>"
+    elsif (width < height)
+      "#{new_width.to_s}x>"
+    else
+      "#{new_width}x#{new_height}>"
+    end
   end
 
 end
