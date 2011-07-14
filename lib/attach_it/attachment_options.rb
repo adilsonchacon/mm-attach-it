@@ -157,11 +157,15 @@ class AttachmentOptions
 
   def file_is_resizale?
     if @styles.keys.size > 0
-      begin
-        system("identify -format %wx%h #{@assigned_file.path}")
-      rescue Exception => exception
-        false
+      result = ''
+      IO.popen("identify -format %wx%h #{@assigned_file.path} 2>&1") do |o|
+        @pid = o.pid
+        while line = o.gets do
+          result = result + line.to_s
+        end
       end
+
+      !result.match(/^\d+x\d+$/).nil?
     else
       true
     end
