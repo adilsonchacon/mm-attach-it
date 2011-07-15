@@ -1,8 +1,8 @@
 module AttachIt
 
-  def self.configure(model)
-    model.class_eval do
-    end
+  extend ActiveSupport::Concern
+
+  included do
   end
 
   module ClassMethods
@@ -26,7 +26,11 @@ module AttachIt
         information_for(name, options)
       end
   
-      validates_each name, :logic => lambda { information_for(name, options).send(:flush_errors) }
+
+      validates_each(name) do |record, attr, value|
+        record.information_for(name, options).send(:flush_errors)
+      end
+
     end
 
     def validates_attachment_size(name = nil, options = {})
@@ -37,7 +41,7 @@ module AttachIt
       message = message.gsub(/:min/, min.to_s).gsub(/:max/, max.to_s)
 
       validates_inclusion_of :"#{name}_file_size",
-                             :within    => range,
+                             :in        => range,
                              :message   => message,
                              :allow_nil => true
     end
@@ -55,7 +59,7 @@ module AttachIt
       message = options[:message] || "is not one of #{allowed_types.join(", ")}"
 
       validates_inclusion_of :"#{name}_content_type",
-                             :within    => allowed_types,
+                             :in        => allowed_types,
                              :message   => message,
                              :allow_nil => true
     end
