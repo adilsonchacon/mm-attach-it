@@ -10,6 +10,10 @@ Or add it to your Rails’s Gemfile::
 
   gem "mm-attach-it"
 
+If you are using Mongo Mapper 0.8.x or later
+
+  gem "mm-attach-it", "~> 0.1.5"
+
 == Usage
 
 === Model
