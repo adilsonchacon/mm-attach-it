@@ -105,7 +105,7 @@ class AttachmentOptions
 
   private
   def interpolate(source = nil, style_name = nil)
-    result = source.gsub(/\:rails_root/, Rails.root)
+    result = source.gsub(/\:rails_root/, Rails.root.to_s)
     result.gsub!(/\:environment/, Rails.env)
     result.gsub!(/\:filename/, @filename.nil? ? '' : @filename)
     result.gsub!(/\:extension/, @extension.nil? ? '' : @extension)
