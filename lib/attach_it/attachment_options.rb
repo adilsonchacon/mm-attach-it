@@ -114,6 +114,9 @@ class AttachmentOptions
     result.gsub!(/\:class/, @class_name)
     result.gsub!(/\:attachment/, @attachment)
     result.gsub!(/(\/){2,}/, '/')
+    while result.match(/:model\.([A-Za-z\_]+)/)
+      result.sub!(/:model\.[A-Za-z\_]+/, @model.send($1))
+    end
     result
   end
 

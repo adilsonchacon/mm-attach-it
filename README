@@ -71,6 +71,23 @@ If you are using the file system to store files, you can specify the directory/f
 
 OBS: The default directory is ’/:rails_root/public/system/:attachment/:id/:style/:filename’
 
+
+Also you can interpolate any method result of the model
+
+  class Foo
+    include MongoMapper::Document
+    plugin AttachIt
+    has_attachment :photo, { :url => '/:model.say_greet/users/:model.say_farewell/:id/:filename', :path => ':rails_root/public/:model.say_greet/:model.say_farewell/users/:id/:filename' }
+
+    def say_greet
+      'hello'
+    end
+
+    def say_farewell
+      'bye'
+    end
+  end
+
 Where:
 * :rails_root - is the root directory of your Rails application
 * :environment - can be "production", "test" or "development"
@@ -80,6 +97,7 @@ Where:
 * :style - if you specified the styles
 * :filename - the name of the file
 * :extension - the extension of the file
+* :model.METHOD_NAME - where METHOD_NAME is any method of the model
 
 === View
 

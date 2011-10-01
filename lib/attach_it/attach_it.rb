@@ -72,8 +72,10 @@ module AttachIt
     end
 
     def save_attachments
-      @attachment_options.keys.each do |name|
-        @attachment_options[name].save
+      unless @attachment_options.nil?
+        @attachment_options.keys.each do |name|
+          @attachment_options[name].save
+        end
       end
     end
 

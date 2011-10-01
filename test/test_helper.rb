@@ -116,6 +116,21 @@ class UserTwelve
   has_attachment :avatar, { :styles => { :small => '150x150>', :medium => '300x300>' }, :storage => 'gridfs' }
 end
 
+class UserThirteen
+  include MongoMapper::Document
+  plugin AttachIt
+  key :name, String 
+  has_attachment :avatar, { :url => '/:model.say_greet/users/:model.say_farewell/:id/:filename', :path => ':rails_root/public/:model.say_greet/:model.say_farewell/users/:id/:filename' }
+
+  def say_greet
+    'hello'
+  end
+
+  def say_farewell
+    'bye'
+  end
+end
+
 class DocumentOne
   include MongoMapper::Document
   plugin AttachIt

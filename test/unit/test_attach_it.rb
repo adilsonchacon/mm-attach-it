@@ -284,4 +284,20 @@ class TestAttachIt < Test::Unit::TestCase
 
   end
 
+  context "Iterpolate model methods" do
+    setup do
+      @user = UserThirteen.new
+      @user.name = 'Myname'
+      @user.avatar = File.open(JpgImageFile, 'rb')
+      @user.save
+    end
+
+    should "show methods returns" do
+      assert_match('hello', @user.avatar.path)
+      assert_match('bye', @user.avatar.path)
+      assert_match('hello', @user.avatar.url)
+      assert_match('bye', @user.avatar.url)
+    end
+  end
+
 end
