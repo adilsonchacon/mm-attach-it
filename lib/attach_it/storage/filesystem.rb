@@ -15,6 +15,7 @@ class Filesystem < Storage
       begin
         FileUtils.mkdir_p(File.dirname(image_options.path(:original)))
         FileUtils.cp(image_options.assigned_file.path, image_options.path(:original)) 
+        FileUtils.chmod(0644, image_options.path(:original))
       rescue Exception => exception
         image_options.add_error(exception.to_s)
       end
